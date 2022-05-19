@@ -1,3 +1,10 @@
+![my badge](https://badgen.net/badge/maven/3.8.4/blue?icon=maven)
+![my badge](https://badgen.net/badge/docker/20.10.12/yellow?icon=docker)
+![my badge](https://badgen.net/badge/git/2.3.1/red?icon=git)
+![my badge](https://badgen.net/badge/java/11/red)
+![my badge](https://badgen.net/badge/spring-boot/2.6.7/green)
+![my badge](https://badgen.net/badge/code%20style/standard/f2a)
+
 # Flash Pet Backend 
 
 Flash Pet is a project based on Java 11 and Spring Boot.
