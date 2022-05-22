@@ -16,6 +16,8 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.IteratorUtils;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +42,8 @@ public class CompanyServiceImpl implements CompanyService {
 
             company.setPageNumber(pageNumber);
 
+            company.setLocation(new GeoPoint(companyInp.getLat(), companyInp.getLon()));
+
             return CompanyMapper.toOut(companyRepository.save(company));
         } catch (Exception e) {
             throw new CompanyServiceException("Error to save company", e);
@@ -60,7 +64,9 @@ public class CompanyServiceImpl implements CompanyService {
         final Map<String, String> params = Map.of(
                 ParamsConstant.PAGE_NUMBER, filter.getPageNumber().toString(),
                 ParamsConstant.SERVICE_DESC, filter.getServiceDescription(),
-                ParamsConstant.PRICE_CATEGORY, filter.getPriceCategory()
+                ParamsConstant.PRICE_CATEGORY, filter.getPriceCategory(),
+                ParamsConstant.GEO_LAT, filter.getLat().toString(),
+                ParamsConstant.GEO_LON, filter.getLon().toString()
         );
 
         final CustomQuery customQuery = QueryFactory.getQuery(QueryType.GET_ALL);

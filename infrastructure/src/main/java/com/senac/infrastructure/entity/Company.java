@@ -6,6 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.GeoPointField;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
 import java.util.List;
 
@@ -31,6 +33,9 @@ public class Company {
 
     @Field(type = FieldType.Text)
     private PriceCategory priceCategory;
+
+    @GeoPointField
+    private GeoPoint location;
 
     @Field(type = FieldType.Nested, includeInParent = true)
     private List<ServiceC> services;

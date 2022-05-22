@@ -35,8 +35,8 @@ public class CompanyRoute implements CompaniesApiDelegate {
     }
 
     @Override
-    public ResponseEntity<List<Company>> findCompanies(Integer pageNumber, String serviceDescription, String priceCategory) {
-        return ResponseEntity.ok(companyService.getAll(FilterApiMapper.toDomain(pageNumber, serviceDescription, priceCategory))
+    public ResponseEntity<List<Company>> findCompanies(Integer pageNumber, String serviceDescription, String priceCategory, Double latitude, Double longitude) {
+        return ResponseEntity.ok(companyService.getAll(FilterApiMapper.toDomain(pageNumber, serviceDescription, priceCategory, latitude, longitude))
                         .stream().map(CompanyApiMapper::toResponse).collect(Collectors.toList()));
     }
 }

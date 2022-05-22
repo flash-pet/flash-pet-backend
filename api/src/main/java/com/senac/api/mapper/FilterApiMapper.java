@@ -7,10 +7,15 @@ public class FilterApiMapper {
 
     public static Filter toDomain(Integer pageNumber,
                            String serviceDescription,
-                           String priceCategory) {
+                           String priceCategory,
+                           Double latitude,
+                           Double longitude) {
         return Filter.builder()
                 .pageNumber(pageNumber)
                 .serviceDescription(serviceDescription)
-                .priceCategory(priceCategory).build();
+                .priceCategory(priceCategory)
+                .lat(latitude)
+                .lon(longitude)
+                .build();
     }
 }

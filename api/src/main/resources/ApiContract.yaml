@@ -78,7 +78,6 @@ paths:
       parameters:
         - in: query
           name: page_number
-          required: true
           type: integer
         - in: query
           name: service_description
@@ -89,6 +88,14 @@ paths:
           enum:
             - low_100_300
             - low_max_100_1000
+        - in: query
+          name: latitude
+          type: number
+          format: double
+        - in: query
+          name: longitude
+          type: number
+          format: double
       summary: Finds all companies
       operationId: findCompanies
       produces:
@@ -117,6 +124,12 @@ definitions:
       address:
         type: string
         format: string
+      latitude:
+        type: number
+        format: double
+      longitude:
+        type: number
+        format: double
       services:
         type: array
         items:

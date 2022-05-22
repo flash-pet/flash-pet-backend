@@ -14,14 +14,18 @@ public class CompanyApiMapper {
         company.setId(companyOut.getId());
         company.setName(companyOut.getName());
         company.setAddress(companyOut.getAddress());
+        company.setLatitude(companyOut.getLat());
+        company.setLongitude(companyOut.getLon());
         company.setServices(companyOut.getServices().stream().map(ServiceApiMapper::toResponse).collect(Collectors.toList()));
-        return null;
+        return company;
     }
 
     public static final CompanyInp toDomain(Company company) {
         return CompanyInp.builder()
                 .name(company.getName())
                 .address(company.getAddress())
+                .lat(company.getLatitude())
+                .lon(company.getLongitude())
                 .services(company.getServices().stream().map(ServiceApiMapper::toDomain).collect(Collectors.toList()))
                 .build();
     }

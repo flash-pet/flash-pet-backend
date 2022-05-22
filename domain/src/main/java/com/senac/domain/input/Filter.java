@@ -11,4 +11,6 @@ public class Filter {
     private Integer pageNumber;
     private String serviceDescription;
     private String priceCategory;
+    private Double lat;
+    private Double lon;
 }

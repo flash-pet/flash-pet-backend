@@ -13,5 +13,7 @@ import java.util.List;
 public class CompanyInp {
     private String name;
     private String address;
+    private Double lat;
+    private Double lon;
     private List<ServiceInp> services;
 }
