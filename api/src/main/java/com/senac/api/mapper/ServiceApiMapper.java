@@ -11,6 +11,7 @@ public class ServiceApiMapper {
         final Service service = new Service();
         service.setDescription(serviceOut.getDescription());
         service.setId(serviceOut.getId());
+        service.setPrice(serviceOut.getPrice());
         return service;
     }
 

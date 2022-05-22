@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 @Builder
 public class Filter {
-    private Integer pageNumber;
     private String serviceDescription;
+    private String serviceType;
     private String priceCategory;
     private Double lat;
     private Double lon;

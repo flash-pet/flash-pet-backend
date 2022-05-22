@@ -2,6 +2,7 @@ package com.senac.service.impl;
 
 import com.senac.domain.input.CompanyInp;
 import com.senac.domain.input.Filter;
+import com.senac.domain.output.CompanyGetAllOut;
 import com.senac.domain.output.CompanyOut;
 import com.senac.infrastructure.constants.ParamsConstant;
 import com.senac.infrastructure.entity.Company;
@@ -12,15 +13,18 @@ import com.senac.infrastructure.repository.CompanyRepository;
 import com.senac.service.CompanyService;
 import com.senac.service.exception.CompanyServiceException;
 import com.senac.service.mapper.CompanyMapper;
+import com.senac.service.utils.FilterUtils;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.IteratorUtils;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.SearchScrollHits;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,18 +35,12 @@ public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
     private final ElasticsearchRestTemplate elasticsearchRestTemplate;
+    private static final long SCROLL_TIME = (long) (1000 * 60) * 60;
 
     @Override
     public CompanyOut add(CompanyInp companyInp) {
         try {
             final Company company = CompanyMapper.toEntity(companyInp);
-
-            int size = IteratorUtils.toList(companyRepository.findAll().iterator()).size();
-            var pageNumber = size / 5;
-
-            company.setPageNumber(pageNumber);
-
-            company.setLocation(new GeoPoint(companyInp.getLat(), companyInp.getLon()));
 
             return CompanyMapper.toOut(companyRepository.save(company));
         } catch (Exception e) {
@@ -60,21 +58,48 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public List<CompanyOut> getAll(final Filter filter) {
-        final Map<String, String> params = Map.of(
-                ParamsConstant.PAGE_NUMBER, filter.getPageNumber().toString(),
-                ParamsConstant.SERVICE_DESC, filter.getServiceDescription(),
-                ParamsConstant.PRICE_CATEGORY, filter.getPriceCategory(),
-                ParamsConstant.GEO_LAT, filter.getLat().toString(),
-                ParamsConstant.GEO_LON, filter.getLon().toString()
-        );
+    public CompanyGetAllOut getAll(final Filter filter) {
+        Query query;
 
-        final CustomQuery customQuery = QueryFactory.getQuery(QueryType.GET_ALL);
-        final Query query = customQuery.execute(params);
+        if(FilterUtils.isEmpty(filter)) {
+            query = QueryFactory.getQuery(QueryType.GET_ALL_WITHOUT_PARAMS).execute(null);
+        } else {
+            final Map<String, String> params = new HashMap<String, String>() {{
+                put(ParamsConstant.SERVICE_DESC, filter.getServiceDescription());
+                put(ParamsConstant.SERVICE_TYPE, filter.getServiceType());
+                put(ParamsConstant.PRICE_CATEGORY, filter.getPriceCategory());
+                put(ParamsConstant.GEO_LAT, filter.getLat() == null ? null : filter.getLat().toString());
+                put(ParamsConstant.GEO_LON, filter.getLon() == null ? null : filter.getLon().toString());
+            }};
 
-        final SearchHits<Company> companySearchHits = elasticsearchRestTemplate.search(query, Company.class);
+            query = QueryFactory.getQuery(QueryType.GET_ALL).execute(params);
+        }
 
-        return IteratorUtils.toList(companySearchHits.iterator()).stream().map(it -> CompanyMapper.toOut(it.getContent())).collect(Collectors.toList());
+        final SearchScrollHits<Company> companySearchScrollHits = elasticsearchRestTemplate.searchScrollStart(SCROLL_TIME, query, Company.class, IndexCoordinates.of("companyindex"));
+
+        final List<CompanyOut> companyOutList = IteratorUtils.toList(companySearchScrollHits.iterator())
+                .stream()
+                .map(it -> CompanyMapper.toOut(it.getContent()))
+                .collect(Collectors.toList());
+
+        return CompanyGetAllOut.builder()
+                .scrollId(companySearchScrollHits.getScrollId())
+                .companies(companyOutList).build();
+    }
+
+    @Override
+    public CompanyGetAllOut getByScroll(String scroll) {
+
+        final SearchScrollHits<Company> companySearchScrollHits = elasticsearchRestTemplate.searchScrollContinue(scroll, SCROLL_TIME, Company.class, IndexCoordinates.of("companyindex"));
+
+        final List<CompanyOut> companyOutList = IteratorUtils.toList(companySearchScrollHits.iterator())
+                .stream()
+                .map(it -> CompanyMapper.toOut(it.getContent()))
+                .collect(Collectors.toList());
+
+        return CompanyGetAllOut.builder()
+                .scrollId(companySearchScrollHits.getScrollId())
+                .companies(companyOutList).build();
     }
 
 }

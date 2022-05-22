@@ -28,12 +28,6 @@ public class Company {
     @Field(type = FieldType.Text)
     private String address;
 
-    @Field(type = FieldType.Integer)
-    private Integer pageNumber;
-
-    @Field(type = FieldType.Text)
-    private PriceCategory priceCategory;
-
     @GeoPointField
     private GeoPoint location;
 

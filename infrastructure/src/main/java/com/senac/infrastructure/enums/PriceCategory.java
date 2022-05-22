@@ -4,8 +4,9 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum PriceCategory {
-    LOW_100_300(100.00, 300.00),
-    LOW_MAX_100_1000(100.00, 1000000.00);
+    LOW_000_300(0.00, 300.00),
+    MIDDLE_300_500(300.00, 600.00),
+    HIGH_600_UP(600.00, Double.MAX_VALUE);
 
     public Double min;
     public Double max;

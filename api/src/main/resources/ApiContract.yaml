@@ -38,7 +38,7 @@ paths:
         '405':
           description: Invalid input
           schema:
-            $ref: '#/definitions/ApiResponse'
+            $ref: '#/definitions/ModelApiResponse'
     put:
       tags:
         - company
@@ -63,22 +63,19 @@ paths:
         '400':
           description: Invalid ID supplied
           schema:
-            $ref: '#/definitions/ApiResponse'
+            $ref: '#/definitions/ModelApiResponse'
         '404':
           description: Company not found
           schema:
-            $ref: '#/definitions/ApiResponse'
+            $ref: '#/definitions/ModelApiResponse'
         '405':
           description: Validation exception
           schema:
-            $ref: '#/definitions/ApiResponse'
+            $ref: '#/definitions/ModelApiResponse'
     get:
       tags:
         - company
       parameters:
-        - in: query
-          name: page_number
-          type: integer
         - in: query
           name: service_description
           type: string
@@ -86,8 +83,18 @@ paths:
           name: price_category
           type: string
           enum:
-            - low_100_300
-            - low_max_100_1000
+            - low_000_300
+            - midlle_300_600
+            - high_600_up
+        - in: query
+          name: service_type
+          type: string
+          enum:
+            - bath_shear
+            - vaccinate
+            - medical_consultation
+            - surgery
+            - host
         - in: query
           name: latitude
           type: number
@@ -102,6 +109,10 @@ paths:
         - application/json
       responses:
         '200':
+          headers:
+            X-Sroll-id:
+              type: string
+              description: scroll id.
           description: successful operation
           schema:
             type: array
@@ -110,7 +121,38 @@ paths:
         '400':
           description: Invalid status value
           schema:
-            $ref: '#/definitions/ApiResponse'
+            $ref: '#/definitions/ModelApiResponse'
+
+  /companies/{scroll}:
+    get:
+      tags:
+        - company
+      parameters:
+        - in: path
+          name: scroll
+          type: string
+          required: true
+      summary: Finds all companies
+      operationId: findCompaniesByScroll
+      produces:
+        - application/json
+      responses:
+        '200':
+          headers:
+            X-Sroll-id:
+              type: string
+              description: scroll id.
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Company'
+        '400':
+          description: Invalid status value
+          schema:
+            $ref: '#/definitions/ModelApiResponse'
+
+
 definitions:
   Company:
     type: object
@@ -146,7 +188,7 @@ definitions:
       price:
         type: number
         format: double
-  ApiResponse:
+  ModelApiResponse:
     type: object
     properties:
       code:

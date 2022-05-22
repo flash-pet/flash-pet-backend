@@ -4,6 +4,7 @@ import com.senac.domain.input.CompanyInp;
 import com.senac.domain.output.CompanyOut;
 import com.senac.infrastructure.entity.Company;
 import com.senac.infrastructure.enums.PriceCategory;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -16,7 +17,7 @@ public class CompanyMapper {
                 .id(UUID.randomUUID().toString())
                 .name(companyInp.getName())
                 .address(companyInp.getAddress())
-                .priceCategory(PriceCategory.LOW_100_300)
+                .location(new GeoPoint(companyInp.getLat(), companyInp.getLon()))
                 .services(companyInp.getServices().stream().map(ServiceMapper::toEntity).collect(Collectors.toList()))
                 .build();
     }
@@ -26,6 +27,8 @@ public class CompanyMapper {
                 .id(company.getId())
                 .name(company.getName())
                 .address(company.getAddress())
+                .lat(company.getLocation().getLat())
+                .lon(company.getLocation().getLon())
                 .services(company.getServices().stream().map(ServiceMapper::toOut).collect(Collectors.toList()))
                 .build();
     }
