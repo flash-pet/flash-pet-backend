@@ -31,6 +31,9 @@ public class Company {
     @GeoPointField
     private GeoPoint location;
 
+    @Field(type = FieldType.Object)
+    private Owner owner;
+
     @Field(type = FieldType.Nested, includeInParent = true)
     private List<ServiceC> services;
 }

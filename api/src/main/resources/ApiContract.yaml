@@ -9,6 +9,8 @@ tags:
     description: Everything about your Pets
   - name: service
     description: Access to Petstore orders
+  - name: auth
+    description: Auth service
 schemes:
   - https
   - http
@@ -152,6 +154,31 @@ paths:
           schema:
             $ref: '#/definitions/ModelApiResponse'
 
+  /authenticate:
+    post:
+      tags:
+        - auth
+      summary: Endpoint to get jwt token
+      description: ''
+      operationId: auth
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Jwt_Request'
+      responses:
+        '200':
+          description: Jwt generated
+          schema:
+            $ref: '#/definitions/Jwt_Response'
+        '405':
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/ModelApiResponse'
+
 
 definitions:
   Company:
@@ -176,6 +203,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Service'
+
   Service:
     type: object
     properties:
@@ -188,6 +216,24 @@ definitions:
       price:
         type: number
         format: double
+
+  Jwt_Request:
+    type: object
+    properties:
+      username:
+        type: string
+        format: string
+      password:
+        type: string
+        format: string
+
+  Jwt_Response:
+    type: object
+    properties:
+      token:
+        type: string
+        format: string
+
   ModelApiResponse:
     type: object
     properties:

@@ -16,11 +16,15 @@ import com.senac.service.mapper.CompanyMapper;
 import com.senac.service.utils.FilterUtils;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.IteratorUtils;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.SearchScrollHits;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
 
@@ -73,6 +77,8 @@ public class CompanyServiceImpl implements CompanyService {
             }};
 
             query = QueryFactory.getQuery(QueryType.GET_ALL).execute(params);
+
+            query = query.setPageable(PageRequest.of(0, 10));
         }
 
         final SearchScrollHits<Company> companySearchScrollHits = elasticsearchRestTemplate.searchScrollStart(SCROLL_TIME, query, Company.class, IndexCoordinates.of("companyindex"));
