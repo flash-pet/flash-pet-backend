@@ -10,6 +10,7 @@ public class FilterUtils {
                 filter.getServiceType()         == null   &&
                 filter.getPriceCategory()       == null   &&
                 filter.getLon()                 == null   &&
-                filter.getLat()                 == null;
+                filter.getLat()                 == null   &&
+                filter.getDay()                 == null;
     }
 }

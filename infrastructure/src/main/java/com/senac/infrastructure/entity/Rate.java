@@ -1,31 +1,31 @@
 package com.senac.infrastructure.entity;
 
-
-import com.senac.infrastructure.enums.ServiceType;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import java.util.Map;
+import java.time.LocalDate;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Document(indexName = "serviceindex")
-public class ServiceC {
+@Document(indexName = "rateindex")
+public class Rate {
+
     @Id
     private String id;
 
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Integer)
+    private Integer value;
+
+    @Field(type = FieldType.Integer)
     private String description;
 
-    @Field(type = FieldType.Text)
-    private ServiceType type;
+    @Field(type = FieldType.Date)
+    private LocalDate date;
 
-    @Field(type = FieldType.Double)
-    private Double price;
 }

@@ -38,8 +38,8 @@ public class CompanyRoute implements CompaniesApiDelegate {
     }
 
     @Override
-    public ResponseEntity<List<Company>> findCompanies(String serviceDescription, String priceCategory, String serviceType, Double latitude, Double longitude) {
-        final Filter filter = FilterApiMapper.toDomain(serviceDescription, priceCategory, serviceType, latitude, longitude);
+    public ResponseEntity<List<Company>> findCompanies(String serviceDescription, String priceCategory, String serviceType, Double latitude, Double longitude, String day) {
+        final Filter filter = FilterApiMapper.toDomain(serviceDescription, priceCategory, serviceType, latitude, longitude, day);
 
         final CompanyGetAllOut companyGetAllOut = companyService.getAll(filter);
 

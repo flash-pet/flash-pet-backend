@@ -21,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         final OwnerOut owner = ownerService.getByUsername(username);
-        if(username.equals(owner.getUserName())) {
+        if(username.equals(owner.getUsername())) {
             return new User(username, owner.getPassword(), new ArrayList<>());
         } else {
             throw new SecurityException("User not found with username: " + username);

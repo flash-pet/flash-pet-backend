@@ -17,6 +17,9 @@ public class CompanyApiMapper {
         company.setLatitude(companyOut.getLat());
         company.setLongitude(companyOut.getLon());
         company.setServices(companyOut.getServices().stream().map(ServiceApiMapper::toResponse).collect(Collectors.toList()));
+        company.setContact(ContactApiMapper.toResponse(companyOut.getContacts()));
+        company.setDays(DayApiMapper.toResponse(companyOut.getDays()));
+        company.setOwner(OwnerApiMapper.toResponse(companyOut.getOwner()));
         return company;
     }
 
@@ -27,6 +30,9 @@ public class CompanyApiMapper {
                 .lat(company.getLatitude())
                 .lon(company.getLongitude())
                 .services(company.getServices().stream().map(ServiceApiMapper::toDomain).collect(Collectors.toList()))
+                .owner(OwnerApiMapper.toDomain(company.getOwner()))
+                .days(DayApiMapper.toDomain(company.getDays()))
+                .contacts(ContactApiMapper.toDomain(company.getContact()))
                 .build();
     }
 }

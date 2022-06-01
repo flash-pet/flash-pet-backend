@@ -74,6 +74,7 @@ public class CompanyServiceImpl implements CompanyService {
                 put(ParamsConstant.PRICE_CATEGORY, filter.getPriceCategory());
                 put(ParamsConstant.GEO_LAT, filter.getLat() == null ? null : filter.getLat().toString());
                 put(ParamsConstant.GEO_LON, filter.getLon() == null ? null : filter.getLon().toString());
+                put(ParamsConstant.DAY, filter.getDay());
             }};
 
             query = QueryFactory.getQuery(QueryType.GET_ALL).execute(params);

@@ -19,6 +19,9 @@ public class CompanyMapper {
                 .address(companyInp.getAddress())
                 .location(new GeoPoint(companyInp.getLat(), companyInp.getLon()))
                 .services(companyInp.getServices().stream().map(ServiceMapper::toEntity).collect(Collectors.toList()))
+                .owner(OwnerMapper.toEntity(companyInp.getOwner()))
+                .days(DayMapper.toEntity(companyInp.getDays()))
+                .contacts(ContactMapper.toEntity(companyInp.getContacts()))
                 .build();
     }
 
@@ -30,6 +33,9 @@ public class CompanyMapper {
                 .lat(company.getLocation().getLat())
                 .lon(company.getLocation().getLon())
                 .services(company.getServices().stream().map(ServiceMapper::toOut).collect(Collectors.toList()))
+                .owner(OwnerMapper.toOut(company.getOwner()))
+                .days(DayMapper.toOut(company.getDays()))
+                .contacts(ContactMapper.toOut(company.getContacts()))
                 .build();
     }
 }

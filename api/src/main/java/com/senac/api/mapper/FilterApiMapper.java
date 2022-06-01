@@ -9,13 +9,15 @@ public class FilterApiMapper {
                                   String priceCategory,
                                   String serviceType,
                                   Double latitude,
-                                  Double longitude) {
+                                  Double longitude,
+                                  String day) {
         return Filter.builder()
                 .serviceDescription(serviceDescription)
                 .serviceType(serviceType)
                 .priceCategory(priceCategory)
                 .lat(latitude)
                 .lon(longitude)
+                .day(day)
                 .build();
     }
 }

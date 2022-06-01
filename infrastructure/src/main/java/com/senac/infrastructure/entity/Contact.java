@@ -1,31 +1,25 @@
 package com.senac.infrastructure.entity;
 
-
-import com.senac.infrastructure.enums.ServiceType;
+import com.senac.infrastructure.enums.ContactType;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import java.util.Map;
-
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Document(indexName = "serviceindex")
-public class ServiceC {
+@Document(indexName = "contactindex")
+public class Contact {
     @Id
     private String id;
 
     @Field(type = FieldType.Text)
-    private String description;
+    private ContactType contactType;
 
     @Field(type = FieldType.Text)
-    private ServiceType type;
-
-    @Field(type = FieldType.Double)
-    private Double price;
+    private String number;
 }

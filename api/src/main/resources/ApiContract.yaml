@@ -105,6 +105,17 @@ paths:
           name: longitude
           type: number
           format: double
+        - in: query
+          name: day
+          type: string
+          enum:
+            - monday
+            - tuesday
+            - wednesday
+            - thursday
+            - friday
+            - saturday
+            - sunday;
       summary: Finds all companies
       operationId: findCompanies
       produces:
@@ -203,6 +214,20 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Service'
+      owner:
+        $ref: '#/definitions/Owner'
+      days:
+        type: object
+        additionalProperties:
+          type: object
+          properties:
+            time:
+              $ref: '#/definitions/Time'
+      contact:
+        type: array
+        items:
+          $ref: '#/definitions/Contact'
+
 
   Service:
     type: object
@@ -216,6 +241,52 @@ definitions:
       price:
         type: number
         format: double
+      service_type:
+        type: string
+        format: string
+          -  bath_shear,
+          -  vaccinate,
+          -  medical_consultation,
+          -  surgery,
+          -  host
+
+  Owner:
+    type: object
+    properties:
+      id:
+        type: string
+        format: string
+      username:
+        type: string
+        format: string
+      password:
+        type: string
+        format: string
+      email:
+        type: string
+        format: string
+
+  Time:
+    type: object
+    properties:
+      start:
+        type: string
+        format: string
+      end:
+        type: string
+        format: string
+
+  Contact:
+    type: object
+    properties:
+      ContactType:
+        type: string
+        format: string
+          - cellphone
+          - telephone
+      number:
+        type: string
+        format: string
 
   Jwt_Request:
     type: object

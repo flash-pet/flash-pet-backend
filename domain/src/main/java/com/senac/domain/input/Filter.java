@@ -13,4 +13,5 @@ public class Filter {
     private String priceCategory;
     private Double lat;
     private Double lon;
+    private String day;
 }

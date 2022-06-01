@@ -1,4 +1,4 @@
-package com.senac.infrastructure.enums;
+package com.senac.domain.enums;
 
 public enum ServiceType {
     BATH_SHEAR,

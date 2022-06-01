@@ -1,5 +1,6 @@
 package com.senac.domain.input;
 
+import com.senac.domain.enums.ServiceType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,4 +11,5 @@ import lombok.Setter;
 public class ServiceInp {
     private String description;
     private Double price;
+    private ServiceType serviceType;
 }
