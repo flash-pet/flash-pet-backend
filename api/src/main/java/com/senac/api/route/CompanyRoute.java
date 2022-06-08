@@ -1,10 +1,15 @@
 package com.senac.api.route;
 
+import com.senac.api.dto.CacheRate;
 import com.senac.api.dto.Company;
+import com.senac.api.dto.IndividualRate;
+import com.senac.api.mapper.CacheExpirationApiMapper;
 import com.senac.api.mapper.CompanyApiMapper;
 import com.senac.api.mapper.FilterApiMapper;
+import com.senac.api.mapper.IndividualRateApiMapper;
 import com.senac.domain.input.Filter;
 import com.senac.domain.output.CompanyGetAllOut;
+import com.senac.security.utils.JwtTokenUtil;
 import com.senac.service.CompanyService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,8 +43,14 @@ public class CompanyRoute implements CompaniesApiDelegate {
     }
 
     @Override
-    public ResponseEntity<List<Company>> findCompanies(String serviceDescription, String priceCategory, String serviceType, Double latitude, Double longitude, String day) {
-        final Filter filter = FilterApiMapper.toDomain(serviceDescription, priceCategory, serviceType, latitude, longitude, day);
+    public ResponseEntity<List<Company>> findCompanies(String serviceDescription,
+                                                       String priceCategory,
+                                                       String serviceType,
+                                                       Double latitude,
+                                                       Double longitude,
+                                                       String day,
+                                                       Integer rate) {
+        final Filter filter = FilterApiMapper.toDomain(serviceDescription, priceCategory, serviceType, latitude, longitude, day, rate);
 
         final CompanyGetAllOut companyGetAllOut = companyService.getAll(filter);
 
@@ -61,5 +72,16 @@ public class CompanyRoute implements CompaniesApiDelegate {
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HEADER_SCROLL_ID, companyGetAllOut.getScrollId())
                 .body(companyList);
+    }
+
+    @Override
+    public ResponseEntity<Void> addRate(String companyId, String cacheCode, IndividualRate body) {
+         companyService.addRate(companyId, cacheCode, IndividualRateApiMapper.toDomain(body));
+         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<CacheRate> getRate(String companyId) {
+        return ResponseEntity.ok(CacheExpirationApiMapper.toResponse(companyService.generateRate(companyId)));
     }
 }

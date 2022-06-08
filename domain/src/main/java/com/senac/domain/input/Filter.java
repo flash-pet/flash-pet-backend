@@ -14,4 +14,5 @@ public class Filter {
     private Double lat;
     private Double lon;
     private String day;
+    private Integer rate;
 }

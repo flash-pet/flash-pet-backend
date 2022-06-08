@@ -1,18 +1,15 @@
 package com.senac.domain.output;
 
-import com.senac.domain.enums.ServiceType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @Builder
-public class ServiceOut {
+public class IndividualRateOut {
     private String id;
+    private Integer value;
     private String description;
-    private Double price;
-    private ServiceType serviceType;
-    private String image;
+    private String date;
 }

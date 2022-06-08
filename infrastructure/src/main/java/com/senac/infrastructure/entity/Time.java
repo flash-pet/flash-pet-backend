@@ -11,7 +11,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @NoArgsConstructor
 @Getter
 @Setter
-@Document(indexName = "timeindex")
+@Document(indexName = "time_index")
 public class Time {
 
     @Id

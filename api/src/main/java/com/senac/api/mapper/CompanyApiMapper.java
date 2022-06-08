@@ -20,6 +20,7 @@ public class CompanyApiMapper {
         company.setContact(ContactApiMapper.toResponse(companyOut.getContacts()));
         company.setDays(DayApiMapper.toResponse(companyOut.getDays()));
         company.setOwner(OwnerApiMapper.toResponse(companyOut.getOwner()));
+        company.setRate(RateApiMapper.toResponse(companyOut.getRate()));
         return company;
     }
 

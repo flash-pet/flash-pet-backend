@@ -1,10 +1,6 @@
 package com.senac.domain.output;
 
 import com.senac.domain.enums.DayTypeEn;
-import com.senac.domain.input.ContactInp;
-import com.senac.domain.input.OwnerInp;
-import com.senac.domain.input.ServiceInp;
-import com.senac.domain.input.TimeInp;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,4 +21,7 @@ public class CompanyOut {
     private OwnerOut owner;
     private Map<DayTypeEn, TimeOut> days;
     private List<ContactOut> contacts;
+    private RateOut rate;
+    private String logo;
+    private List<String> images;
 }

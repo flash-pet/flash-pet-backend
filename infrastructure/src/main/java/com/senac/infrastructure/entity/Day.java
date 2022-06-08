@@ -11,7 +11,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @NoArgsConstructor
 @Getter
 @Setter
-@Document(indexName = "dayindex")
+@Document(indexName = "day_index")
 public class Day {
 
     @Field(type = FieldType.Text)

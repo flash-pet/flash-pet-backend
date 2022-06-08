@@ -115,7 +115,11 @@ paths:
             - thursday
             - friday
             - saturday
-            - sunday;
+            - sunday
+        - in: query
+          name: rate
+          type: integer
+          format: int32
       summary: Finds all companies
       operationId: findCompanies
       produces:
@@ -160,6 +164,63 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Company'
+        '400':
+          description: Invalid status value
+          schema:
+            $ref: '#/definitions/ModelApiResponse'
+
+  /companies/{companyId}/rates:
+    post:
+      tags:
+        - company
+      parameters:
+        - in: path
+          name: companyId
+          type: string
+          required: true
+        - in: query
+          name: cache_code
+          type: string
+          required: true
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/IndividualRate'
+      summary: Add a rate for especific company
+      operationId: addRate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Invalid status value
+          schema:
+            $ref: '#/definitions/ModelApiResponse'
+
+  /companies/{companyId}/rates/generate:
+    get:
+      tags:
+        - company
+      parameters:
+        - in: path
+          name: companyId
+          type: string
+          required: true
+      summary: get cache code of rate
+      operationId: getRate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/CacheRate'
         '400':
           description: Invalid status value
           schema:
@@ -227,7 +288,16 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Contact'
-
+      rate:
+        $ref: '#/definitions/Rate'
+      logo:
+        type: string
+        format: string
+      carrosel:
+        type: array
+        items:
+          type: string
+          format: string
 
   Service:
     type: object
@@ -249,6 +319,9 @@ definitions:
           -  medical_consultation,
           -  surgery,
           -  host
+      image:
+        type: string
+        format: string
 
   Owner:
     type: object
@@ -287,6 +360,43 @@ definitions:
       number:
         type: string
         format: string
+
+
+  Rate:
+    type: object
+    properties:
+      avg:
+        type: number
+        format: double
+      individual_rate:
+        type: array
+        items:
+          $ref: '#/definitions/IndividualRate'
+
+
+  CacheRate:
+    type: object
+    properties:
+      code:
+        type: string
+        format: string
+      expiration:
+        type: string
+        format: string
+
+  IndividualRate:
+    type: object
+    properties:
+      date:
+        type: string
+        format: string
+      description:
+        type: string
+        format: string
+      value:
+        type: integer
+        format: int32
+
 
   Jwt_Request:
     type: object

@@ -6,23 +6,25 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Document(indexName = "rate_index")
-public class Rate {
+@Document(indexName = "individual_rate_index")
+public class IndividualRate {
+
     @Id
     private String id;
 
-    @Field(type = FieldType.Double)
-    private Double avg;
+    @Field(type = FieldType.Integer)
+    private Integer value;
 
-    @Field(type = FieldType.Nested, includeInParent = true)
-    private List<IndividualRate> individualRates;
+    @Field(type = FieldType.Text)
+    private String description;
 
-
+    @Field(type = FieldType.Date)
+    private String date;
 }

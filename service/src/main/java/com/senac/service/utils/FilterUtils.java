@@ -11,6 +11,7 @@ public class FilterUtils {
                 filter.getPriceCategory()       == null   &&
                 filter.getLon()                 == null   &&
                 filter.getLat()                 == null   &&
-                filter.getDay()                 == null;
+                filter.getDay()                 == null   &&
+                filter.getRate()                == null;
     }
 }

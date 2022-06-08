@@ -15,4 +15,5 @@ public class ParamsConstant {
     public static final String GEO_LON = "lon";
     public static final String DISTANCE = "distance";
     public static final String DAY = "day";
+    public static final String RATE = "rate";
 }

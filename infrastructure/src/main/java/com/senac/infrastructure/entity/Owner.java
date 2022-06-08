@@ -11,13 +11,13 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @NoArgsConstructor
 @Getter
 @Setter
-@Document(indexName = "ownerindex")
+@Document(indexName = "owner_index")
 public class Owner {
 
     @Id
     private String id;
 
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Keyword)
     private String username;
 
     @Field(type = FieldType.Text)

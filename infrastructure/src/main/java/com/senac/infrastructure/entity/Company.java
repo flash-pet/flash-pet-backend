@@ -1,6 +1,5 @@
 package com.senac.infrastructure.entity;
 
-import com.senac.infrastructure.enums.DayType;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -10,14 +9,13 @@ import org.springframework.data.elasticsearch.annotations.GeoPointField;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
 import java.util.List;
-import java.util.Map;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Document(indexName = "companyindex")
+@Document(indexName = "company_index")
 public class Company {
 
     @Id
@@ -32,7 +30,7 @@ public class Company {
     @GeoPointField
     private GeoPoint location;
 
-    @Field(type = FieldType.Object)
+    @Field(type = FieldType.Object, includeInParent = true)
     private Owner owner;
 
     @Field(type = FieldType.Nested, includeInParent = true)
@@ -41,9 +39,15 @@ public class Company {
     @Field(type = FieldType.Nested, includeInParent = true)
     private List<ServiceC> services;
 
-    @Field(type = FieldType.Nested, includeInParent = true)
-    private List<Rate>  rates;
+    @Field(type = FieldType.Object, includeInParent = true)
+    private Rate rate;
 
     @Field(type = FieldType.Nested, includeInParent = true)
     private List<Day> days;
+
+    @Field(type = FieldType.Text)
+    private String logo;
+
+    @Field(type = FieldType.Nested)
+    private List<String> images;
 }

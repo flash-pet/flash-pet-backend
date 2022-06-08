@@ -15,7 +15,7 @@ import java.util.Map;
 @NoArgsConstructor
 @Getter
 @Setter
-@Document(indexName = "serviceindex")
+@Document(indexName = "service_index")
 public class ServiceC {
     @Id
     private String id;

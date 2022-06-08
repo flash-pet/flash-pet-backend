@@ -1,10 +1,7 @@
 package com.senac.infrastructure.query.impl;
 
 import com.senac.infrastructure.constants.ParamsConstant;
-import com.senac.infrastructure.param.impl.DayParameter;
-import com.senac.infrastructure.param.impl.GeoParameter;
-import com.senac.infrastructure.param.impl.PriceCategoryParameter;
-import com.senac.infrastructure.param.impl.ServiceDescriptionParameter;
+import com.senac.infrastructure.param.impl.*;
 import com.senac.infrastructure.query.CustomQuery;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
@@ -50,6 +47,9 @@ public class QueryGetAllImpl implements CustomQuery {
 
         if(params.get(ParamsConstant.DAY) != null)
             parameters.add(new DayParameter().build(params));
+
+        if(params.get(ParamsConstant.RATE) != null)
+            parameters.add(new RateParameter().build(params));
 
         Criteria criteria = parameters.poll();
         while (parameters.size() > 0 ) {

@@ -12,7 +12,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @NoArgsConstructor
 @Getter
 @Setter
-@Document(indexName = "contactindex")
+@Document(indexName = "contact_index")
 public class Contact {
     @Id
     private String id;

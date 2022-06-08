@@ -10,7 +10,8 @@ public class FilterApiMapper {
                                   String serviceType,
                                   Double latitude,
                                   Double longitude,
-                                  String day) {
+                                  String day,
+                                  Integer rate) {
         return Filter.builder()
                 .serviceDescription(serviceDescription)
                 .serviceType(serviceType)
@@ -18,6 +19,7 @@ public class FilterApiMapper {
                 .lat(latitude)
                 .lon(longitude)
                 .day(day)
+                .rate(rate)
                 .build();
     }
 }
