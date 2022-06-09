@@ -38,6 +38,9 @@ public class QueryGetAllImpl implements CustomQuery {
         if(params.get(ParamsConstant.SERVICE_DESC) != null)
             parameters.add(new ServiceDescriptionParameter().build(params));
 
+        if (params.get(ParamsConstant.SERVICE_TYPE) != null)
+            parameters.add(new ServiceTypeParameter().build(params));
+
         if(params.get(ParamsConstant.PRICE_CATEGORY) != null)
             parameters.add(new PriceCategoryParameter().build(params));
 
