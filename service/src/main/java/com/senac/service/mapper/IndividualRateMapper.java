@@ -12,8 +12,8 @@ public class IndividualRateMapper {
     private IndividualRateMapper(){}
 
     public static final IndividualRate toEntity(RateInp rateInp) {
+        if(rateInp == null) return null;
         return IndividualRate.builder()
-                .id(UUID.randomUUID().toString())
                 .date(LocalDate.now().toString())
                 .description(rateInp.getDescription())
                 .value(rateInp.getValue())
@@ -21,6 +21,7 @@ public class IndividualRateMapper {
     }
 
     public static final IndividualRateOut toOut(IndividualRate individualRate) {
+        if(individualRate == null) return null;
         return IndividualRateOut.builder()
                 .id(individualRate.getId())
                 .value(individualRate.getValue())

@@ -48,6 +48,6 @@ public class Company {
     @Field(type = FieldType.Text)
     private String logo;
 
-    @Field(type = FieldType.Nested)
-    private List<String> images;
+    @Field(type = FieldType.Text, includeInParent = true)
+    private List<String> carrosel;
 }

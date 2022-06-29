@@ -12,12 +12,14 @@ public class ContactApiMapper {
     private ContactApiMapper(){}
 
     public static final List<ContactInp> toDomain(List<Contact> contacts) {
+        if(contacts == null) return null;
         return contacts.stream()
                 .map(contact -> convertDomain(contact))
                 .collect(Collectors.toList());
     }
 
     public static final List<Contact> toResponse(List<ContactOut> contacts) {
+        if(contacts == null) return null;
         return contacts.stream()
                 .map(contact -> convertResponse(contact))
                 .collect(Collectors.toList());

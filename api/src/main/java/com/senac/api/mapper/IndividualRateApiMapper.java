@@ -8,6 +8,7 @@ public class IndividualRateApiMapper {
     private IndividualRateApiMapper(){}
 
     public static final IndividualRate toResponse(IndividualRateOut individualRateOut) {
+        if(individualRateOut == null) return null;
         final IndividualRate individualRate = new IndividualRate();
         individualRate.setDate(individualRateOut.getDate());
         individualRate.setDescription(individualRateOut.getDescription());
@@ -16,6 +17,7 @@ public class IndividualRateApiMapper {
     }
 
     public static final RateInp toDomain(IndividualRate individualRate) {
+        if(individualRate == null) return null;
         return RateInp.builder()
                 .description(individualRate.getDescription())
                 .value(individualRate.getValue())

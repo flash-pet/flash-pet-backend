@@ -9,6 +9,7 @@ public class RateApiMapper {
     private RateApiMapper(){}
 
     public static final Rate toResponse(RateOut rate) {
+        if(rate == null) return null;
         final Rate rateResponse = new Rate();
         rateResponse.setIndividualRate(rate.getRates().stream().map(IndividualRateApiMapper::toResponse).collect(Collectors.toList()));
         rateResponse.setAvg(rate.getAvg());

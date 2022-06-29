@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class ServiceInp {
+    private String id;
     private String description;
     private Double price;
     private ServiceType serviceType;

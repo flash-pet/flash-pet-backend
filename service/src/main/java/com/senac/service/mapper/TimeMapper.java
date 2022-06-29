@@ -7,6 +7,7 @@ import com.senac.infrastructure.entity.Time;
 public class TimeMapper {
     private TimeMapper(){}
     public static final Time toEntity(TimeInp timeInp) {
+        if(timeInp == null) return null;
         return Time.builder()
                 .start(timeInp.getStart())
                 .end(timeInp.getEnd())
@@ -14,6 +15,7 @@ public class TimeMapper {
     }
 
     public static final TimeOut toOut(Time time) {
+        if(time == null) return null;
         return TimeOut.builder()
                 .start(time.getStart())
                 .end(time.getEnd())

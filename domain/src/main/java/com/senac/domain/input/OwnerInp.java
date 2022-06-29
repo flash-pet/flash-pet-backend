@@ -11,4 +11,6 @@ public class OwnerInp {
     private String username;
     private String password;
     private String email;
+    private String cnpj;
+    private String id;
 }

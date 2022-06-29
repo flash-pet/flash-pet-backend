@@ -25,4 +25,7 @@ public class Owner {
 
     @Field(type = FieldType.Text)
     private String email;
+
+    @Field(type = FieldType.Text)
+    private String cnpj;
 }

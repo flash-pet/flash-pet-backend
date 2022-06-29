@@ -10,6 +10,7 @@ import lombok.Setter;
 public class OwnerOut {
     private String id;
     private String username;
-    private String password;
     private String email;
+    private String password;
+    private String cnpj;
 }

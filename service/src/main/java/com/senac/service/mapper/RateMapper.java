@@ -11,8 +11,9 @@ public class RateMapper {
     private RateMapper() {}
 
     public static final RateOut toOut(Rate rate) {
+        if(rate == null) return null;
         return RateOut.builder()
-                .id(rate.getId())
+                .id(rate.getId() == null ? null : rate.getId())
                 .avg(rate.getAvg())
                 .rates(rate.getIndividualRates().stream().map(IndividualRateMapper::toOut)
                         .collect(Collectors.toList()))

@@ -1,6 +1,7 @@
 package com.senac.service.impl;
 
-import com.google.common.util.concurrent.AtomicDouble;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senac.domain.input.CompanyInp;
 import com.senac.domain.input.Filter;
 import com.senac.domain.input.RateInp;
@@ -14,7 +15,11 @@ import com.senac.infrastructure.enums.QueryType;
 import com.senac.infrastructure.query.QueryFactory;
 import com.senac.infrastructure.repository.CompanyRepository;
 import com.senac.service.CompanyService;
+import com.senac.service.S3Service;
 import com.senac.service.cache.RateCache;
+import com.senac.service.config.ServiceProperties;
+import com.senac.service.enums.S3Path;
+import com.senac.service.exception.CacheException;
 import com.senac.service.exception.CompanyServiceException;
 import com.senac.service.mapper.CompanyMapper;
 import com.senac.service.mapper.IndividualRateMapper;
@@ -28,6 +33,7 @@ import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,12 +46,28 @@ public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
     private final ElasticsearchRestTemplate elasticsearchRestTemplate;
-    private static final long SCROLL_TIME = (long) (1000 * 60) * 60;
+    private final S3Service s3Service;
+    private final ServiceProperties serviceProperties;
+    private final RateCache rateCache;
+
+
 
     @Override
     public CompanyOut add(CompanyInp companyInp) {
         try {
             final Company company = CompanyMapper.toEntity(companyInp);
+
+            company.setLogo(s3Service.saveImage(companyInp.getLogo(), S3Path.LOGO));
+
+            company.setCarrosel(companyInp.getCarrosel().stream()
+                    .map(image -> s3Service.saveImage(image, S3Path.CARROSEL))
+                    .collect(Collectors.toList())
+            );
+
+            company.setRate(Rate.builder()
+                    .avg(0.0)
+                    .individualRates(new ArrayList<>())
+                    .build());
 
             return CompanyMapper.toOut(companyRepository.save(company));
         } catch (Exception e) {
@@ -55,8 +77,34 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyOut update(CompanyInp companyInp) {
+        final ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         try {
-            return CompanyMapper.toOut(companyRepository.save(CompanyMapper.toEntity(companyInp)));
+            final Company entityDTO = CompanyMapper.toEntity(companyInp);
+
+            final Company entity = companyRepository.findById(companyInp.getId())
+                    .orElseThrow(() -> new CompanyServiceException("Invalid company id"));
+
+            if(entityDTO.getCarrosel() != null) {
+                entity.getCarrosel().forEach(url -> s3Service.deleteImage(url, S3Path.CARROSEL));
+
+                entityDTO.setCarrosel(companyInp.getCarrosel().stream()
+                        .map(image -> s3Service.saveImage(image, S3Path.CARROSEL))
+                        .collect(Collectors.toList())
+                );
+            }
+
+            if(entityDTO.getLogo() != null) {
+                s3Service.deleteImage(entity.getLogo(), S3Path.LOGO);
+
+                entityDTO.setLogo(s3Service.saveImage(companyInp.getLogo(), S3Path.LOGO));
+            }
+
+            final String entityJson = mapper.writeValueAsString(entityDTO);
+
+            final Company company = mapper.readerForUpdating(entity).readValue(entityJson);
+
+            return CompanyMapper.toOut(companyRepository.save(company));
         } catch (Exception e) {
             throw new CompanyServiceException("Error to save company", e);
         }
@@ -84,7 +132,7 @@ public class CompanyServiceImpl implements CompanyService {
             query = query.setPageable(PageRequest.of(0, 10));
         }
 
-        final SearchScrollHits<Company> companySearchScrollHits = elasticsearchRestTemplate.searchScrollStart(SCROLL_TIME, query, Company.class, IndexCoordinates.of("company_index"));
+        final SearchScrollHits<Company> companySearchScrollHits = elasticsearchRestTemplate.searchScrollStart(serviceProperties.getScrollTime(), query, Company.class, IndexCoordinates.of("company_index"));
 
         final List<CompanyOut> companyOutList = IteratorUtils.toList(companySearchScrollHits.iterator())
                 .stream()
@@ -99,7 +147,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyGetAllOut getByScroll(String scroll) {
 
-        final SearchScrollHits<Company> companySearchScrollHits = elasticsearchRestTemplate.searchScrollContinue(scroll, SCROLL_TIME, Company.class, IndexCoordinates.of("companyindex"));
+        final SearchScrollHits<Company> companySearchScrollHits = elasticsearchRestTemplate.searchScrollContinue(scroll, serviceProperties.getScrollTime(), Company.class, IndexCoordinates.of("companyindex"));
 
         final List<CompanyOut> companyOutList = IteratorUtils.toList(companySearchScrollHits.iterator())
                 .stream()
@@ -113,7 +161,11 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void addRate(String companyId, String cache_code, RateInp rateInp) {
-        final String cacheCompanyId = RateCache.getCompanyId(cache_code);
+        final String cacheCompanyId = rateCache.getCompanyId(cache_code);
+
+        if(cacheCompanyId == null) {
+            throw new CacheException("Cache not exit");
+        }
 
         if(!companyId.equals(cacheCompanyId)) {
             throw new CompanyServiceException("CompanyId is not valid");
@@ -142,9 +194,12 @@ public class CompanyServiceImpl implements CompanyService {
         companyRepository.findById(companyId)
                 .orElseThrow(() -> new CompanyServiceException("Company not exist"));
 
+        final String expiration = serviceProperties.getCacheDuration().toString()
+                .concat("M");
+
         return CacheExpirationOut.builder()
-                .value(RateCache.generateCode(companyId))
-                .expiration("2M")
+                .value(rateCache.generateCode(companyId))
+                .expiration(expiration)
                 .build();
     }
 

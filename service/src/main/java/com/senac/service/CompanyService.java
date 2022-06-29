@@ -6,6 +6,7 @@ import com.senac.domain.input.RateInp;
 import com.senac.domain.output.CacheExpirationOut;
 import com.senac.domain.output.CompanyGetAllOut;
 import com.senac.domain.output.CompanyOut;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 

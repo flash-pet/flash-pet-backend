@@ -11,8 +11,9 @@ public class ServiceMapper {
     private ServiceMapper(){}
 
     public static final ServiceC toEntity(ServiceInp serviceInp) {
+        if(serviceInp == null) return null;
         return ServiceC.builder()
-                .id(UUID.randomUUID().toString())
+                .id(serviceInp.getId() == null ? UUID.randomUUID().toString() : serviceInp.getId())
                 .description(serviceInp.getDescription())
                 .price(serviceInp.getPrice())
                 .type(ServiceType.valueOf(serviceInp.getServiceType().toString().toUpperCase()))
@@ -20,11 +21,13 @@ public class ServiceMapper {
     }
 
     public static final ServiceOut toOut(ServiceC serviceC) {
+        if(serviceC == null) return null;
         return ServiceOut.builder()
                 .id(serviceC.getId())
                 .description(serviceC.getDescription())
                 .price(serviceC.getPrice())
                 .serviceType(com.senac.domain.enums.ServiceType.valueOf(serviceC.getType().toString().toUpperCase()))
+                .image(serviceC.getType().getImageUrl())
                 .build();
     }
 }

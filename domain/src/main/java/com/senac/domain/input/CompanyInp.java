@@ -13,6 +13,7 @@ import java.util.Map;
 @Setter
 @Builder
 public class CompanyInp {
+    private String id;
     private String name;
     private String address;
     private Double lat;
@@ -21,4 +22,6 @@ public class CompanyInp {
     private OwnerInp owner;
     private Map<DayTypeEn, TimeInp> days;
     private List<ContactInp> contacts;
+    private List<String> carrosel;
+    private String logo;
 }

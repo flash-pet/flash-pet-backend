@@ -1,0 +1,6 @@
+infra:
+  aws:
+    access-key: ${AWS_ACCESS_KEY:ADMIN}
+    secret-key: ${AWS_SECRET_KEY:ADMIN}
+    open-search:
+      url: ${AWS_OPEN_SEACRH_URL:localhost:9200}

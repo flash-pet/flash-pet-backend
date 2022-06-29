@@ -50,6 +50,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers(HttpMethod.POST,"/v1/authenticate").permitAll()
                 .antMatchers(HttpMethod.POST, "/v1/companies").permitAll()
                 .antMatchers(HttpMethod.GET, "/v1/companies").permitAll()
+                .regexMatchers(HttpMethod.POST, "/v1/companies/.+/rates\\?cache_code=.+").permitAll()
+                .antMatchers(HttpMethod.POST, "/v1/companies/{companyId}/rates?cache_code=").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()

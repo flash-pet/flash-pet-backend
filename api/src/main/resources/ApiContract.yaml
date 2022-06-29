@@ -7,8 +7,6 @@ basePath: /v1
 tags:
   - name: company
     description: Everything about your Pets
-  - name: service
-    description: Access to Petstore orders
   - name: auth
     description: Auth service
 schemes:
@@ -336,6 +334,9 @@ definitions:
         type: string
         format: string
       email:
+        type: string
+        format: string
+      cnpj:
         type: string
         format: string
 

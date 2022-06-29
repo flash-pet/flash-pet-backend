@@ -1,0 +1,4 @@
+sec:
+  jwt:
+    secret: ${JWT_SECRET:FLASH_PET_SECRET}
+    validity: ${JWT_TOKEN_VALIDITY:18000}

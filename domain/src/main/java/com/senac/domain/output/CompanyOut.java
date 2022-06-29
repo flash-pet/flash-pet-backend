@@ -23,5 +23,5 @@ public class CompanyOut {
     private List<ContactOut> contacts;
     private RateOut rate;
     private String logo;
-    private List<String> images;
+    private List<String> carrosel;
 }

@@ -13,12 +13,14 @@ public class ContactMapper {
     private ContactMapper(){}
 
     public static final List<Contact> toEntity(List<ContactInp> contactInps) {
+        if(contactInps == null) return null;
         return contactInps.stream()
                 .map(contact -> convertEntity(contact))
                 .collect(Collectors.toList());
     }
 
     public static final List<ContactOut> toOut(List<Contact> contacts) {
+        if(contacts == null) return null;
         return contacts.stream()
                 .map(contact -> convertOut(contact))
                 .collect(Collectors.toList());

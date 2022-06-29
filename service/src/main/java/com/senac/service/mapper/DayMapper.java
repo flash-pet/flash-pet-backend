@@ -14,12 +14,14 @@ public class DayMapper {
     private DayMapper() {}
 
     public static final List<Day> toEntity(Map<DayTypeEn, TimeInp> days) {
+        if(days == null) return null;
        return days.entrySet().stream()
                 .map(entry -> convertToEntity(entry))
                 .collect(Collectors.toList());
     }
 
     public static final Map<DayTypeEn, TimeOut> toOut(List<Day> days) {
+        if(days == null) return null;
         return days.stream()
                 .collect(Collectors.toMap(entry -> DayTypeEn.valueOf(entry.getType().toString().toUpperCase()),
                         entry -> TimeMapper.toOut(entry.getTime())));

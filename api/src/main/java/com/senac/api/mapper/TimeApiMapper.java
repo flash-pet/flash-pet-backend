@@ -8,6 +8,7 @@ public class TimeApiMapper {
     private TimeApiMapper(){}
 
     public static final TimeInp toDomain(Time time) {
+        if(time == null) return null;
         return TimeInp.builder()
                 .start(time.getStart())
                 .end(time.getEnd())
@@ -15,6 +16,7 @@ public class TimeApiMapper {
     }
 
     public static final Time toResponse(TimeOut time) {
+        if(time == null) return null;
         final Time timeResponse = new Time();
         timeResponse.setStart(time.getStart());
         timeResponse.setEnd(time.getEnd());
