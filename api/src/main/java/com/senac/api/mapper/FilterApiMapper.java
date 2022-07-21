@@ -1,17 +1,21 @@
 package com.senac.api.mapper;
 
-import com.senac.domain.input.Filter;
+
+import com.senac.domain.dto.Filter;
+
+import java.util.List;
 
 public class FilterApiMapper {
     private FilterApiMapper(){}
 
     public static Filter toDomain(String serviceDescription,
-                                  String priceCategory,
-                                  String serviceType,
+                                  List<Object> priceCategory,
+                                  List<String> serviceType,
                                   Double latitude,
                                   Double longitude,
-                                  String day,
-                                  Integer rate) {
+                                  List<String> day,
+                                  Integer rate,
+                                  Integer rateFinal) {
         return Filter.builder()
                 .serviceDescription(serviceDescription)
                 .serviceType(serviceType)

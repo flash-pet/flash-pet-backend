@@ -11,8 +11,8 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.senac"})
 @EntityScan(basePackages = {"com.senac.infrastructure.entity"})
-@EnableElasticsearchRepositories(basePackages = "com.senac.infrastructure.repository")
-@PropertySource("classpath:application-service.yml")
+@EnableElasticsearchRepositories(basePackages = "com.senac.adapter.repository")
+@PropertySource("classpath:application-usecase.yml")
 public class PetshopApplication {
 
 	public static void main(String[] args) {

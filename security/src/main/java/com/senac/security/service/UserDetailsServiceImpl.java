@@ -1,8 +1,8 @@
 package com.senac.security.service;
 
-import com.senac.domain.output.OwnerOut;
+import com.senac.domain.entity.Owner;
 import com.senac.security.exception.SecurityException;
-import com.senac.service.OwnerService;
+import com.senac.usecase.usecase.owner.GetOwnerByUserNameUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,11 +16,11 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final OwnerService ownerService;
+    private final GetOwnerByUserNameUseCase ownerService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final OwnerOut owner = ownerService.getByUsername(username);
+        final Owner owner = ownerService.getByUsername(username);
         if(username.equals(owner.getUsername())) {
             return new User(username, owner.getPassword(), new ArrayList<>());
         } else {

@@ -1,6 +1,6 @@
 spring:
   config:
     import:
-        - "classpath:application-service.yml"
+        - "classpath:application-usecase.yml"
         - "classpath:application-sec.yml"
-        - "classpath:application-infra.yml"
+        - "classpath:application-adapter.yml"

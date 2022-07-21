@@ -1,0 +1,3 @@
+usecase:
+  scroll-time: ${SCROLL_TIME:3600000}
+

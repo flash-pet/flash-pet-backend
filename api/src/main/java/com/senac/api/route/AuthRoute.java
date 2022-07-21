@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class AuthRoute implements AuthenticateApiDelegate{
+public class AuthRoute implements AuthenticateApiDelegate {
 
     private AuthenticationManager authenticationManager;
 

@@ -1,6 +1,0 @@
-service:
-  scroll-time: ${SCROLL_TIME:3600000}
-  bucket-name: ${BUCKET_NAME:flash-pet-images}
-  cache-size:  ${CACHE_SIZE:1000}
-  cache-duration:  ${CACHE_DURATION:2}
-

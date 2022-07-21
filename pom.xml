@@ -6,11 +6,12 @@
 
     <modules>
 		<module>api</module>
-		<module>service</module>
-		<module>domain</module>
-		<module>infrastructure</module>
 		<module>test</module>
 		<module>security</module>
+		<module>domain</module>
+		<module>usecase</module>
+		<module>adapter</module>
+		<module>commons</module>
 	</modules>
 
     <parent>

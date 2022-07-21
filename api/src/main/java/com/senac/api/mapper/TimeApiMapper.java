@@ -1,21 +1,19 @@
 package com.senac.api.mapper;
 
 import com.senac.api.dto.Time;
-import com.senac.domain.input.TimeInp;
-import com.senac.domain.output.TimeOut;
 
 public class TimeApiMapper {
     private TimeApiMapper(){}
 
-    public static final TimeInp toDomain(Time time) {
+    public static final com.senac.domain.entity.Time toDomain(Time time) {
         if(time == null) return null;
-        return TimeInp.builder()
+        return com.senac.domain.entity.Time.builder()
                 .start(time.getStart())
                 .end(time.getEnd())
                 .build();
     }
 
-    public static final Time toResponse(TimeOut time) {
+    public static final Time toResponse(com.senac.domain.entity.Time time) {
         if(time == null) return null;
         final Time timeResponse = new Time();
         timeResponse.setStart(time.getStart());

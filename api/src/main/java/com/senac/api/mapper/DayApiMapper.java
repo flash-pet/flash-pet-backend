@@ -1,40 +1,36 @@
 package com.senac.api.mapper;
 
 import com.senac.api.dto.CompanyDays;
-import com.senac.api.dto.Time;
-import com.senac.domain.enums.DayTypeEn;
-import com.senac.domain.input.TimeInp;
-import com.senac.domain.output.TimeOut;
+import com.senac.domain.entity.Day;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DayApiMapper {
     private DayApiMapper(){}
 
-    public static final Map<DayTypeEn, TimeInp> toDomain(Map<String, CompanyDays> daysRequest) {
+    public static final List<Day> toDomain(Map<String, CompanyDays> daysRequest) {
       if(daysRequest == null) return null;
-      final Map<DayTypeEn, TimeInp> days = new HashMap<>();
+      final List<Day> days = new ArrayList<>();
 
         for (var day: daysRequest.entrySet()) {
-            days.put(DayTypeEn.valueOf(day.getKey().toUpperCase()), TimeApiMapper.toDomain(day.getValue().getTime()));
+            days.add(new Day(day.getKey(), TimeApiMapper.toDomain(day.getValue().getTime())));
         }
 
         return days;
     }
 
-    public static final Map<String, CompanyDays> toResponse(Map<DayTypeEn, TimeOut> days) {
+    public static final Map<String, CompanyDays> toResponse(List<Day> days) {
         if(days == null) return null;
-        return days.entrySet().stream()
-                .collect(Collectors.toMap(entry -> entry.getKey().toString(),
-                        entry -> convertToResponse(TimeApiMapper.toResponse(entry.getValue())))
-                );
+        return days.stream().collect(Collectors.toMap(day -> day.getType(),
+                day -> {
+                    var time = TimeApiMapper.toResponse(day.getTime());
+                    CompanyDays companyDays = new CompanyDays();
+                    companyDays.setTime(time);
+                    return companyDays;
+                }));
     }
 
-    private static final CompanyDays convertToResponse(Time time) {
-        final CompanyDays companyDays = new CompanyDays();
-        companyDays.setTime(time);
-        return companyDays;
-    }
 }

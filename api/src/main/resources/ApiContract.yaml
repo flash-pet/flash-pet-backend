@@ -9,6 +9,8 @@ tags:
     description: Everything about your Pets
   - name: auth
     description: Auth service
+  - name: owner
+    description: Owner service
 schemes:
   - https
   - http
@@ -33,8 +35,6 @@ paths:
       responses:
         '201':
           description: Company saved
-          schema:
-            $ref: '#/definitions/Company'
         '405':
           description: Invalid input
           schema:
@@ -58,8 +58,6 @@ paths:
       responses:
         '200':
           description: Company updated
-          schema:
-            $ref: '#/definitions/Company'
         '400':
           description: Invalid ID supplied
           schema:
@@ -81,20 +79,17 @@ paths:
           type: string
         - in: query
           name: price_category
-          type: string
-          enum:
-            - low_000_300
-            - midlle_300_600
-            - high_600_up
+          type: array
+          items:
+            enum:
+              - low_000_300
+              - midlle_300_600
+              - high_600_up
         - in: query
           name: service_type
-          type: string
-          enum:
-            - bath_shear
-            - vaccinate
-            - medical_consultation
-            - surgery
-            - host
+          type: array
+          items:
+            type: string
         - in: query
           name: latitude
           type: number
@@ -105,17 +100,15 @@ paths:
           format: double
         - in: query
           name: day
-          type: string
-          enum:
-            - monday
-            - tuesday
-            - wednesday
-            - thursday
-            - friday
-            - saturday
-            - sunday
+          type: array
+          items:
+            type: string
         - in: query
-          name: rate
+          name: rateInit
+          type: integer
+          format: int32
+        - in: query
+          name: rateFinal
           type: integer
           format: int32
       summary: Finds all companies
@@ -124,20 +117,22 @@ paths:
         - application/json
       responses:
         '200':
-          headers:
-            X-Sroll-id:
-              type: string
-              description: scroll id.
           description: successful operation
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Company'
+            type: object
+            properties:
+              scrollId:
+                type: string
+              resultMatchs:
+                type: string
+              companies:
+                type: array
+                items:
+                  $ref: '#/definitions/Get_Company'
         '400':
           description: Invalid status value
           schema:
             $ref: '#/definitions/ModelApiResponse'
-
   /companies/{scroll}:
     get:
       tags:
@@ -153,20 +148,22 @@ paths:
         - application/json
       responses:
         '200':
-          headers:
-            X-Sroll-id:
-              type: string
-              description: scroll id.
           description: successful operation
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Company'
+            type: object
+            properties:
+              scrollId:
+                type: string
+              resultMatchs:
+                type: string
+              companies:
+                type: array
+                items:
+                  $ref: '#/definitions/Get_Company'
         '400':
           description: Invalid status value
           schema:
             $ref: '#/definitions/ModelApiResponse'
-
   /companies/{companyId}/rates:
     post:
       tags:
@@ -198,7 +195,6 @@ paths:
           description: Invalid status value
           schema:
             $ref: '#/definitions/ModelApiResponse'
-
   /companies/{companyId}/rates/generate:
     get:
       tags:
@@ -223,7 +219,6 @@ paths:
           description: Invalid status value
           schema:
             $ref: '#/definitions/ModelApiResponse'
-
   /authenticate:
     post:
       tags:
@@ -248,8 +243,37 @@ paths:
           description: Invalid input
           schema:
             $ref: '#/definitions/ModelApiResponse'
-
-
+  /owners:
+    get:
+      tags:
+        - owner
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+      summary: Finds all companies
+      operationId: findCompaniesByOwner
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              scrollId:
+                type: string
+              resultMatchs:
+                type: string
+              companies:
+                type: array
+                items:
+                  $ref: '#/definitions/Company'
+        '400':
+          description: Invalid status value
+          schema:
+            $ref: '#/definitions/ModelApiResponse'
 definitions:
   Company:
     type: object
@@ -296,7 +320,60 @@ definitions:
         items:
           type: string
           format: string
-
+  Get_Company:
+    type: object
+    properties:
+      name:
+        type: string
+        format: string
+      address:
+        type: string
+        format: string
+      latitude:
+        type: number
+        format: double
+      longitude:
+        type: number
+        format: double
+      services:
+        type: array
+        items:
+          $ref: '#/definitions/Get_Service'
+      days:
+        type: object
+        additionalProperties:
+          type: object
+          properties:
+            time:
+              $ref: '#/definitions/Time'
+      contact:
+        type: array
+        items:
+          $ref: '#/definitions/Contact'
+      rate:
+        $ref: '#/definitions/Rate'
+      logo:
+        type: string
+        format: string
+      carrosel:
+        type: array
+        items:
+          type: string
+          format: string
+  Get_Service:
+    type: object
+    properties:
+      description:
+        type: string
+        example: Service to shower your pet
+      price:
+        type: number
+        format: double
+      service_type:
+        type: string
+      image:
+        type: string
+        format: string
   Service:
     type: object
     properties:
@@ -311,16 +388,9 @@ definitions:
         format: double
       service_type:
         type: string
-        format: string
-          -  bath_shear,
-          -  vaccinate,
-          -  medical_consultation,
-          -  surgery,
-          -  host
       image:
         type: string
         format: string
-
   Owner:
     type: object
     properties:
@@ -339,7 +409,6 @@ definitions:
       cnpj:
         type: string
         format: string
-
   Time:
     type: object
     properties:
@@ -349,20 +418,14 @@ definitions:
       end:
         type: string
         format: string
-
   Contact:
     type: object
     properties:
       ContactType:
         type: string
-        format: string
-          - cellphone
-          - telephone
       number:
         type: string
         format: string
-
-
   Rate:
     type: object
     properties:
@@ -373,8 +436,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/IndividualRate'
-
-
   CacheRate:
     type: object
     properties:
@@ -384,7 +445,6 @@ definitions:
       expiration:
         type: string
         format: string
-
   IndividualRate:
     type: object
     properties:
@@ -397,8 +457,6 @@ definitions:
       value:
         type: integer
         format: int32
-
-
   Jwt_Request:
     type: object
     properties:
@@ -408,14 +466,12 @@ definitions:
       password:
         type: string
         format: string
-
   Jwt_Response:
     type: object
     properties:
       token:
         type: string
         format: string
-
   ModelApiResponse:
     type: object
     properties:
